@@ -9,9 +9,9 @@
 
  ### Routes
 
- POST http://localhost:8080/api/v0/products
- GET  http://localhost:8080/api/v0/products/{productId}
- GET  http://localhost:8080/api/v0/products/{productId}/priceWithTax
+ POST http://localhost:8080/api/v0/products  
+ GET  http://localhost:8080/api/v0/products/{productId}  
+ GET  http://localhost:8080/api/v0/products/{productId}/priceWithTax  
 
  ## Notes
 
