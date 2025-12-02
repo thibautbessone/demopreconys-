@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import com.example.demo.utils.TaxStrategy;
 
 @Service
 public class ProductService {
+
+	private static Logger LOG = LoggerFactory.getLogger(ProductService.class);
 
 	@Autowired
 	private ProductRepository productRepo;
@@ -35,14 +39,22 @@ public class ProductService {
 		return productRepo.save(newProduct);
 	}
 
-	public BigDecimal getFinalPrice(Long productId) {
-		Product desiredProduct = productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
-		BigDecimal finalPrice;
-		if (strategies.containsKey(desiredProduct.getCountry())) {
-			finalPrice = strategies.get(desiredProduct.getCountry()).calculateTax(desiredProduct);
-		} else
-			throw new RuntimeException("Unsupported Country"); // ResponseEntity avec 422
-		return finalPrice; // nothing if exception thrown
+	public Optional<BigDecimal> getFinalPrice(Long productId) {
+		Optional<BigDecimal> finalPrice = Optional.empty();
+		Optional<Product> desiredProduct = productRepo.findById(productId);
+
+		if (desiredProduct.isEmpty()) {
+			LOG.trace("Cannot find product with ID", productId);
+			return Optional.empty();
+		}
+		if (strategies.containsKey(desiredProduct.get().getCountry())) {
+			finalPrice = Optional
+					.of(strategies.get(desiredProduct.get().getCountry()).calculateTax(desiredProduct.get()));
+		} else {
+			LOG.trace("Unsupported Country", desiredProduct.get().getCountry());
+			return Optional.empty();
+		}
+		return finalPrice;
 	}
 
 }

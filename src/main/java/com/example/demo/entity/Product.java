@@ -7,8 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-//MON CASQUE S'ETEINT TOUT SEUL, JE CHECK LES MESSAGES DE TEMPS EN TEMPS
-
 @Entity
 public class Product {
 

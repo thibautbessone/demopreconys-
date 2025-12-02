@@ -27,7 +27,7 @@ public class ProductController {
 	}
 
 	@PostMapping
-	public Product createProduct(@RequestBody Product product) {
+	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
 		// TODO input sanitization beforehand
 		// if wrong inputs types
 		Product newProduct = new Product();
@@ -35,13 +35,14 @@ public class ProductController {
 		newProduct.setCountry(product.getCountry());
 		newProduct.setPrice(product.getPrice());
 
-		return productService.createProduct(newProduct);
+		Product createProduct = productService.createProduct(newProduct);
+		return ResponseEntity.ok().body(createProduct);
 	}
 
 	@GetMapping("/{productId}/priceWithTax")
-	public BigDecimal getPriceWithTaxById(@PathVariable Long productId) {
-		return productService.getFinalPrice(productId);
-
+	public ResponseEntity<BigDecimal> getPriceWithTaxById(@PathVariable Long productId) {
+		return productService.getFinalPrice(productId).map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.unprocessableContent().build());
 	}
 
 }
