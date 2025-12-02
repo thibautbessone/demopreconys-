@@ -28,8 +28,6 @@ public class ProductController {
 
 	@PostMapping
 	public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-		// TODO input sanitization beforehand
-		// if wrong inputs types
 		Product newProduct = new Product();
 		newProduct.setName(product.getName());
 		newProduct.setCountry(product.getCountry());

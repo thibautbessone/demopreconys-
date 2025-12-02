@@ -43,6 +43,8 @@ public class ProductService {
 		Optional<BigDecimal> finalPrice = Optional.empty();
 		Optional<Product> desiredProduct = productRepo.findById(productId);
 
+		// Validate product exists & is valid
+
 		if (desiredProduct.isEmpty()) {
 			LOG.trace("Cannot find product with ID", productId);
 			return Optional.empty();
